@@ -10,46 +10,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Azure Login action
-      uses: azure/login@v2
-      with:
-        creds: '{"clientId": "a8baf4c3-7ae7-44d4-8eb7-abd20d59320f", "clientSecret": "Its8Q~Lc_5vrIXI5r5u5TcvAUQhGb5bMk.OJdaZX", "subscriptionId": "b4d6c8c8-e796-4093-9f0b-e303b286107c", "tenantId": "caf05679-7352-468b-b402-f86368a8ebc4"}'
-        enable-AzPSSession: true
+      - name: Azure Login action
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId": "a8baf4c3-7ae7-44d4-8eb7-abd20d59320f", "clientSecret": "Its8Q~Lc_5vrIXI5r5u5TcvAUQhGb5bMk.OJdaZX", "subscriptionId": "b4d6c8c8-e796-4093-9f0b-e303b286107c", "tenantId": "caf05679-7352-468b-b402-f86368a8ebc4"}'
+          enable-AzPSSession: true
 
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set Azure Subscription
-      run: |
-        az account set --subscription b4d6c8c8-e796-4093-9f0b-e303b286107c
+      - name: Set Azure Subscription
+        run: |
+          az account set --subscription b4d6c8c8-e796-4093-9f0b-e303b286107c
 
-    - name: Get the first 5 characters of the Commit ID
-      id: get_commit_id
-      run: |
-        COMMIT_ID=${GITHUB_SHA:0:5}
-        echo "First 5 characters of commit ID: $COMMIT_ID"
-        echo "COMMIT_ID=$COMMIT_ID" >> $GITHUB_ENV
+      - name: Get the first 5 characters of the Commit ID
+        id: get_commit_id
+        run: |
+          COMMIT_ID=${GITHUB_SHA:0:5}
+          echo "First 5 characters of commit ID: $COMMIT_ID"
+          echo "COMMIT_ID=$COMMIT_ID" >> $GITHUB_ENV
 
-    - name: Build Docker image
-      run: |
-        docker build -t strapi:${{ env.COMMIT_ID }} -f backend/Dockerfile .
+      - name: Build Docker image
+        run: |
+          docker build -t strapi:${{ env.COMMIT_ID }} -f backend/Dockerfile .
 
-    - name: Log in to Azure Container Registry
-      run: |
-        docker login strapiacrtesting.azurecr.io -u strapiacrtesting -p tZThO906e3Bg98cOCQlCA9IEJdcf6yLTuXFeB3UnZ9+ACRA/N5vc
+      - name: Log in to Azure Container Registry
+        run: |
+          docker login strapiacrtesting.azurecr.io -u strapiacrtesting -p ${{ secrets.REGISTRYPASSWORD }}
 
-    - name: Tag Docker image
-      run: |
-        docker tag strapi:${{ env.COMMIT_ID }} strapiacrtesting.azurecr.io/strapi:${{ env.COMMIT_ID }}
+      - name: Tag Docker image
+        run: |
+          docker tag strapi:${{ env.COMMIT_ID }} strapiacrtesting.azurecr.io/strapi:${{ env.COMMIT_ID }}
 
-    - name: Push Docker image to ACR
-      run: |
-        docker push strapiacrtesting.azurecr.io/strapi:${{ env.COMMIT_ID }}
+      - name: Push Docker image to ACR
+        run: |
+          docker push strapiacrtesting.azurecr.io/strapi:${{ env.COMMIT_ID }}
 
-    - name: App Setting For Different Port
-      run: |
-        az webapp config appsettings set --resource-group testing --name strapi --settings WEBSITES_PORT=8080
+      - name: App Setting For Different Port
+        run: |
+          az webapp config appsettings set --resource-group testing --name strapi --settings WEBSITES_PORT=8080
 
-    - name: Deploy to Azure Web App
-      run: |
-        az webapp config container set --resource-group testing --name strapi --docker-custom-image-name strapiacrtesting.azurecr.io/strapi:${{ env.COMMIT_ID }}
+      - name: Deploy to Azure Web App
+        run: |
+          az webapp config container set --resource-group testing --name strapi --docker-custom-image-name strapiacrtesting.azurecr.io/strapi:${{ env.COMMIT_ID }}
