@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "blog_posts",
+  "info": {
+    "singularName": "blog-post",
+    "pluralName": "blog-posts",
+    "displayName": "Blog Post"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Excerpt": {
+      "type": "string"
+    },
+    "Content": {
+      "type": "blocks"
+    },
+    "Date": {
+      "type": "date"
+    },
+    "Read": {
+      "type": "string"
+    },
+    "Slug": {
+      "type": "uid"
+    },
+    "Category": {
+      "type": "enumeration",
+      "enum": [
+        "AI Agents",
+        "AWS",
+        "Company",
+        "Enterprise",
+        "Freelancer",
+        "Gen AI",
+        "Marketing",
+        "Sales",
+        "Technical",
+        "Agent Studio"
+      ]
+    },
+    "Image": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
+    }
+  }
+}
