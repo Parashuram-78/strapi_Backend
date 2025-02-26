@@ -479,6 +479,7 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
 export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
   collectionName: 'blog_posts';
   info: {
+    description: '';
     displayName: 'Blog Post';
     pluralName: 'blog-posts';
     singularName: 'blog-post';
@@ -506,6 +507,7 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     Date: Schema.Attribute.Date;
+    dynamic1: Schema.Attribute.RichText;
     Excerpt: Schema.Attribute.String;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
