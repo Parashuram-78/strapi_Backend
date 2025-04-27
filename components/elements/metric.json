@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_elements_metrics",
+  "info": {
+    "displayName": "Metric",
+    "description": "Key performance metrics"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "required": true
+    },
+    "prefix": {
+      "type": "string"
+    },
+    "suffix": {
+      "type": "string"
+    }
+  }
+} 

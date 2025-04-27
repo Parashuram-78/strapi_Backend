@@ -23,6 +23,9 @@
         "shared.rich-text",
         "shared.slider"
       ]
+    },
+    "detailed_version": {
+      "type": "richtext"
     }
   }
 }

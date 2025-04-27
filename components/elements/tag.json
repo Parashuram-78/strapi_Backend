@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_elements_tags",
+  "info": {
+    "displayName": "Tag",
+    "description": "Tags for categorizing content"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "color": {
+      "type": "enumeration",
+      "enum": [
+        "blue",
+        "green",
+        "red",
+        "yellow",
+        "purple",
+        "gray"
+      ],
+      "default": "blue",
+      "required": true
+    }
+  }
+} 
