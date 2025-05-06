@@ -1,0 +1,5 @@
+{
+  "collectionName": "components_content_paragraphs",
+  "info": { "displayName": "Paragraph" },
+  "attributes": { "text": { "type": "richtext", "required": true } }
+} 

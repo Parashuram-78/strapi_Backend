@@ -1,0 +1,8 @@
+{
+  "collectionName": "components_content_image_blocks",
+  "info": { "displayName": "Image / Infographic" },
+  "attributes": {
+    "image":   { "type": "media", "required": true },
+    "altText": { "type": "string", "required": true }
+  }
+} 

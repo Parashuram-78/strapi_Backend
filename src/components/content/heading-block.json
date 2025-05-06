@@ -1,0 +1,8 @@
+{
+  "collectionName": "components_content_heading_blocks",
+  "info": { "displayName": "Sub Heading" },
+  "attributes": {
+    "text":  { "type": "string", "required": true },
+    "level": { "type": "enumeration", "enum": ["h3","h4"], "default": "h3" }
+  }
+} 

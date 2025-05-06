@@ -1,0 +1,8 @@
+{
+  "collectionName": "components_content_video_blocks",
+  "info": { "displayName": "Video Embed" },
+  "attributes": {
+    "provider": { "type": "enumeration", "enum": ["youtube","vimeo","other"], "default": "youtube" },
+    "url":      { "type": "string", "required": true }
+  }
+} 

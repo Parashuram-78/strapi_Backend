@@ -1,0 +1,7 @@
+{
+  "collectionName": "components_content_toc",
+  "info": { "displayName": "Table of Contents" },
+  "attributes": {
+    "autoGenerate": { "type": "boolean", "default": true }
+  }
+} 

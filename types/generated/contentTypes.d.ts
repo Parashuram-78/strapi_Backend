@@ -369,86 +369,9 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiAboutAbout extends Struct.CollectionTypeSchema {
-  collectionName: 'abouts';
-  info: {
-    description: 'Write about yourself and the content you create';
-    displayName: 'E-Commerce';
-    pluralName: 'abouts';
-    singularName: 'about';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    blocks: Schema.Attribute.DynamicZone<
-      ['shared.media', 'shared.quote', 'shared.rich-text', 'shared.slider']
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    detailed_version: Schema.Attribute.RichText;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::about.about'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    title: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
-  collectionName: 'articles';
-  info: {
-    description: 'Create your blog content';
-    displayName: 'Article';
-    pluralName: 'articles';
-    singularName: 'article';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    author: Schema.Attribute.Relation<'manyToOne', 'api::author.author'>;
-    blocks: Schema.Attribute.DynamicZone<
-      [
-        'shared.media',
-        'shared.quote',
-        'shared.rich-text',
-        'shared.slider',
-        'shared.seo',
-      ]
-    >;
-    category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
-    cover: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    description: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 80;
-      }>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::article.article'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID<'title'>;
-    title: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   collectionName: 'authors';
   info: {
-    description: 'Create authors for your content';
     displayName: 'Author';
     pluralName: 'authors';
     singularName: 'author';
@@ -457,19 +380,22 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
-    articles: Schema.Attribute.Relation<'oneToMany', 'api::article.article'>;
-    avatar: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
+    bio: Schema.Attribute.Text;
+    blogs: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    email: Schema.Attribute.String;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::author.author'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    photo: Schema.Attribute.Media & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -477,130 +403,103 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
-  collectionName: 'blog_posts';
+export interface ApiBlogBlog extends Struct.CollectionTypeSchema {
+  collectionName: 'blogs';
   info: {
     description: '';
-    displayName: 'Blog Post';
-    pluralName: 'blog-posts';
-    singularName: 'blog-post';
+    displayName: 'Blog';
+    pluralName: 'blogs';
+    singularName: 'blog';
   };
   options: {
     draftAndPublish: true;
   };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
   attributes: {
-    Category: Schema.Attribute.Enumeration<
+    author: Schema.Attribute.Relation<'manyToOne', 'api::author.author'>;
+    body: Schema.Attribute.DynamicZone<
       [
-        'AI Agents',
-        'AWS',
-        'Company',
-        'Enterprise',
-        'Freelancer',
-        'Gen AI',
-        'Marketing',
-        'Sales',
-        'Technical',
-        'Agent Studio',
+        'content.paragraph',
+        'content.image-block',
+        'content.video-block',
+        'content.quote-block',
+        'content.heading-block',
+        'content.call-to-action',
+        'content.table-of-contents',
       ]
-    >;
-    Content: Schema.Attribute.Blocks;
+    > &
+      Schema.Attribute.Required;
+    breadcrumbTitle: Schema.Attribute.String & Schema.Attribute.Required;
+    comments: Schema.Attribute.Relation<'oneToMany', 'api::comment.comment'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    Date: Schema.Attribute.Date;
-    dynamic1: Schema.Attribute.RichText;
-    Excerpt: Schema.Attribute.String;
-    Image: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::blog-post.blog-post'
-    > &
-      Schema.Attribute.Private;
+    excerpt: Schema.Attribute.Text & Schema.Attribute.Required;
+    featuredImage: Schema.Attribute.Media & Schema.Attribute.Required;
+    heading: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'>;
+    noindex: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    priority: Schema.Attribute.Integer;
+    publishDate: Schema.Attribute.Date & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    Read: Schema.Attribute.String;
-    Slug: Schema.Attribute.UID;
-    Title: Schema.Attribute.String;
+    relatedArticles: Schema.Attribute.Relation<'manyToMany', 'api::blog.blog'>;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
+    seoSchema: Schema.Attribute.JSON & Schema.Attribute.Required;
+    slug: Schema.Attribute.UID<'heading'> & Schema.Attribute.Required;
+    subtitle: Schema.Attribute.String;
+    tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
+    thumbnail: Schema.Attribute.Media & Schema.Attribute.Required;
+    trending: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    type: Schema.Attribute.Enumeration<['generic', 'horoscope']> &
+      Schema.Attribute.DefaultTo<'generic'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    visibilityStatus: Schema.Attribute.Enumeration<
+      ['draft', 'live', 'archived']
+    > &
+      Schema.Attribute.DefaultTo<'draft'>;
   };
 }
 
-export interface ApiCaseStudyCaseStudy extends Struct.CollectionTypeSchema {
-  collectionName: 'case_studies';
+export interface ApiCommentComment extends Struct.CollectionTypeSchema {
+  collectionName: 'comments';
   info: {
-    description: 'Collection of case studies with SEO optimization';
-    displayName: 'Case Study';
-    pluralName: 'case-studies';
-    singularName: 'case-study';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    description: Schema.Attribute.Text & Schema.Attribute.Required;
-    detailed_version: Schema.Attribute.RichText & Schema.Attribute.Required;
-    icon: Schema.Attribute.Enumeration<
-      ['building', 'hospital', 'factory', 'chart', 'code', 'database']
-    > &
-      Schema.Attribute.Required;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::case-study.case-study'
-    > &
-      Schema.Attribute.Private;
-    metrics: Schema.Attribute.Component<'elements.metric', true> &
-      Schema.Attribute.Required;
-    publishedAt: Schema.Attribute.DateTime;
-    seo: Schema.Attribute.Component<'shared.seo', false> &
-      Schema.Attribute.Required;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    tags: Schema.Attribute.Component<'elements.tag', true> &
-      Schema.Attribute.Required;
-    title: Schema.Attribute.String & Schema.Attribute.Required;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
-  collectionName: 'categories';
-  info: {
-    description: 'Organize your content into categories';
-    displayName: 'Category';
-    pluralName: 'categories';
-    singularName: 'category';
+    description: 'User comments and questions';
+    displayName: 'Comment / Question';
+    pluralName: 'comments';
+    singularName: 'comment';
   };
   options: {
     draftAndPublish: false;
   };
   attributes: {
-    articles: Schema.Attribute.Relation<'oneToMany', 'api::article.article'>;
+    authorEmail: Schema.Attribute.Email & Schema.Attribute.Required;
+    authorName: Schema.Attribute.String & Schema.Attribute.Required;
+    blog: Schema.Attribute.Relation<'manyToOne', 'api::blog.blog'>;
+    content: Schema.Attribute.Text & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::category.category'
+      'api::comment.comment'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    visibilityStatusComment: Schema.Attribute.Enumeration<
+      ['pending', 'approved', 'rejected']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
   };
 }
 
@@ -630,6 +529,35 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     siteDescription: Schema.Attribute.Text & Schema.Attribute.Required;
     siteName: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTagTag extends Struct.CollectionTypeSchema {
+  collectionName: 'tags';
+  info: {
+    displayName: 'Tag';
+    pluralName: 'tags';
+    singularName: 'tag';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    blogs: Schema.Attribute.Relation<'manyToMany', 'api::blog.blog'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::tag.tag'> &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1145,13 +1073,11 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::about.about': ApiAboutAbout;
-      'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
-      'api::blog-post.blog-post': ApiBlogPostBlogPost;
-      'api::case-study.case-study': ApiCaseStudyCaseStudy;
-      'api::category.category': ApiCategoryCategory;
+      'api::blog.blog': ApiBlogBlog;
+      'api::comment.comment': ApiCommentComment;
       'api::global.global': ApiGlobalGlobal;
+      'api::tag.tag': ApiTagTag;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

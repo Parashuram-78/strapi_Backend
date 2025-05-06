@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "comments",
+  "info": {
+    "singularName": "comment",
+    "pluralName": "comments",
+    "displayName": "Comment / Question",
+    "description": "User comments and questions"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "authorName": {
+      "type": "string",
+      "required": true
+    },
+    "authorEmail": {
+      "type": "email",
+      "required": true
+    },
+    "content": {
+      "type": "text",
+      "required": true
+    },
+    "blog": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::blog.blog",
+      "inversedBy": "comments"
+    },
+    "visibilityStatusComment": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    }
+  }
+}

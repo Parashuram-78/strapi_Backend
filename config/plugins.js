@@ -14,5 +14,8 @@ module.exports = ({ env }) => ({
             },
         },
     },
+    'content-releases': {
+        enabled: false,
+    },
     // ...
 });

@@ -1,0 +1,126 @@
+{
+  "kind": "collectionType",
+  "collectionName": "blogs",
+  "info": {
+    "singularName": "blog",
+    "pluralName": "blogs",
+    "displayName": "Blog",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "generic",
+        "horoscope"
+      ],
+      "default": "generic"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "heading",
+      "required": true
+    },
+    "heading": {
+      "type": "string",
+      "required": true
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "breadcrumbTitle": {
+      "type": "string",
+      "required": true
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::author.author",
+      "required": false
+    },
+    "body": {
+      "type": "dynamiczone",
+      "components": [
+        "content.paragraph",
+        "content.image-block",
+        "content.video-block",
+        "content.quote-block",
+        "content.heading-block",
+        "content.call-to-action",
+        "content.table-of-contents"
+      ],
+      "required": true
+    },
+    "featuredImage": {
+      "type": "media",
+      "multiple": false,
+      "required": true
+    },
+    "publishDate": {
+      "type": "date",
+      "required": true
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag"
+    },
+    "relatedArticles": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::blog.blog"
+    },
+    "trending": {
+      "type": "boolean",
+      "default": false
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "excerpt": {
+      "type": "text",
+      "required": true
+    },
+    "thumbnail": {
+      "type": "media",
+      "multiple": false,
+      "required": true
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    },
+    "seoSchema": {
+      "type": "json",
+      "required": true
+    },
+    "noindex": {
+      "type": "boolean",
+      "default": false
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "blog"
+    },
+    "visibilityStatus": {
+      "type": "enumeration",
+      "enum": [
+        "draft",
+        "live",
+        "archived"
+      ],
+      "default": "draft"
+    }
+  }
+}
