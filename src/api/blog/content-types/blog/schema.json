@@ -68,6 +68,18 @@
       "type": "date",
       "required": true
     },
+    "categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::category.category",
+      "mappedBy": "blogs"
+    },
+    "subcategories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sub-category.sub-category",
+      "inversedBy": "blogs"
+    },
     "tags": {
       "type": "relation",
       "relation": "manyToMany",

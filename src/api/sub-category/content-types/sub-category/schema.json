@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sub_categories",
+  "info": { 
+    "singularName": "sub-category", 
+    "pluralName": "sub-categories", 
+    "displayName": "Sub‑category",
+    "description": "Subcategories are organized under categories"
+  },
+  "options": { 
+    "draftAndPublish": false 
+  },
+  "attributes": {
+    "name": { 
+      "type": "string", 
+      "required": true 
+    },
+    "slug": { 
+      "type": "uid", 
+      "targetField": "name", 
+      "required": true 
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "subCategories",
+      "required": true
+    },
+    "blogs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::blog.blog",
+      "mappedBy": "subcategories"
+    }
+  }
+} 

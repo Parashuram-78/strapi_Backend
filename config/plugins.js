@@ -17,5 +17,9 @@ module.exports = ({ env }) => ({
     'content-releases': {
         enabled: false,
     },
+    'subcategory-filter': {
+        enabled: true,
+        resolve: './src/plugins/subcategory-filter'
+    },
     // ...
 });
