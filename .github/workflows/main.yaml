@@ -1,55 +1,57 @@
-name: Run Azure Login with the Service Principal secret
+name: Deploy Zodiaq App to Azure Web App
 
 on:
   push:
     branches:
-      - main
+      - zodiaq
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Azure Login action
+      - name: Azure Login with Service Principal
         uses: azure/login@v2
         with:
-          creds: '{"clientId": "a8baf4c3-7ae7-44d4-8eb7-abd20d59320f", "clientSecret": "Its8Q~Lc_5vrIXI5r5u5TcvAUQhGb5bMk.OJdaZX", "subscriptionId": "b4d6c8c8-e796-4093-9f0b-e303b286107c", "tenantId": "caf05679-7352-468b-b402-f86368a8ebc4"}'
+          creds: '{"clientId": "5e0345b8-e505-4a7e-bdba-570ce3117f5f", "clientSecret": "YY_8Q~V3KNU5.jw_XsouG2AS_tikzhtKHdQ0ibum", "subscriptionId": "6ed18a24-80e3-4abe-99a6-ee3286ec36e6", "tenantId": "ab2cd235-acf4-4759-a7e3-dd97a44dba3a"}'
           enable-AzPSSession: true
 
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Set Azure Subscription
         run: |
-          az account set --subscription b4d6c8c8-e796-4093-9f0b-e303b286107c
+          az account set --subscription 6ed18a24-80e3-4abe-99a6-ee3286ec36e6
 
-      - name: Get the first 5 characters of the Commit ID
+      - name: Get Commit ID (first 5 characters)
         id: get_commit_id
         run: |
           COMMIT_ID=${GITHUB_SHA:0:5}
-          echo "First 5 characters of commit ID: $COMMIT_ID"
           echo "COMMIT_ID=$COMMIT_ID" >> $GITHUB_ENV
 
-      - name: Build Docker image
+      - name: Build Docker Image
         run: |
-          docker build -t strapi:${{ env.COMMIT_ID }} -f Dockerfile .
+          docker build -t zodiaq:${{ env.COMMIT_ID }} -f Dockerfile .
 
-      - name: Log in to Azure Container Registry
+      - name: Login to Azure Container Registry
         run: |
-          docker login strapiacrtesting.azurecr.io -u strapiacrtesting -p tZThO906e3Bg98cOCQlCA9IEJdcf6yLTuXFeB3UnZ9+ACRA/N5vc
+          docker login zodiaq.azurecr.io -u zodiaq -p yqJMc4B55eTNfBWtMvPVRBMIV+AlHXu0HiKwM8NVxy+ACRDR9vMM
 
-      - name: Tag Docker image
+      - name: Tag Docker Image
         run: |
-          docker tag strapi:${{ env.COMMIT_ID }} strapiacrtesting.azurecr.io/strapi:${{ env.COMMIT_ID }}
+          docker tag zodiaq:${{ env.COMMIT_ID }} zodiaq.azurecr.io/zodiaq:${{ env.COMMIT_ID }}
 
-      - name: Push Docker image to ACR
+      - name: Push Docker Image to ACR
         run: |
-          docker push strapiacrtesting.azurecr.io/strapi:${{ env.COMMIT_ID }}
+          docker push zodiaq.azurecr.io/zodiaq:${{ env.COMMIT_ID }}
 
-      - name: App Setting For Different Port
+      - name: Set Web App Port
         run: |
-          az webapp config appsettings set --resource-group testing --name strapi --settings WEBSITES_PORT=8080
+          az webapp config appsettings set --resource-group flowgic --name zodiaqapp --settings WEBSITES_PORT=8080
 
       - name: Deploy to Azure Web App
         run: |
-          az webapp config container set --resource-group testing --name strapi --docker-custom-image-name strapiacrtesting.azurecr.io/strapi:${{ env.COMMIT_ID }}
+          az webapp config container set \
+            --resource-group flowgic \
+            --name zodiaqapp \
+            --docker-custom-image-name zodiaq.azurecr.io/zodiaq:${{ env.COMMIT_ID }}
