@@ -3,7 +3,7 @@ name: Deploy Zodiaq App to Azure Web App
 on:
   push:
     branches:
-      - zodiaq
+      - zodia
 
 jobs:
   build:
